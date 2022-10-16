@@ -12,13 +12,10 @@ import pickle
 import re
 
 __version__ = "0.1.0"
-
-#folder structure in docker and be a bit different, so this is to be explicit
-BASE_DIR = Path(__file__).resolve(strict = True).parent
-
-with open(f"{BASE_DIR}/trained_model-{__version__}.pkl", "rb") as f:
-    model = pickle.load(f)
     
+IMAGE_W = 100
+IMAGE_H = 100
+
 classes = [
 'pink primrose',
  'hard-leaved pocket orchid',
@@ -124,12 +121,16 @@ classes = [
  'blackberry lily',
 ]
 
-IMAGE_W = 100
-IMAGE_H = 100
-
 flower_transform = transforms.Compose([
     transforms.ToPILImage(), transforms.Resize((IMAGE_W,IMAGE_H)), transforms.ToTensor(), transforms.Normalize((0.485, 0.456, 0.406),(0.229,0.224,0.225))
 ])
+
+def get_model():
+    BASE_DIR = Path(__file__).resolve(strict = True).parent
+    with open(f"{BASE_DIR}/trained_model-{__version__}.pkl", "rb") as f:
+        model = pickle.load(f)
+
+    return model
 
 class PredictDataset(Dataset):
     def __init__(self, metadata, transform=None):
@@ -149,7 +150,6 @@ class PredictDataset(Dataset):
         
         return sk_image
 
-
 def predict(loader, model):
 
     model.eval()
@@ -166,18 +166,19 @@ def predict(loader, model):
     return predicted_class
             
 def predict_pipeline(image_path:str):
-        
     # image_path = ['/Users/julia.ju/Desktop/Flower-Identification-API/prediction_image/test_5.jpg']
-
+    
     p_df = pd.DataFrame(
-        {'image_path': image_path}
+        {'image_path': [image_path]}
     )
 
+    model = get_model()
     p_dataset = PredictDataset(p_df, flower_transform)
-
     loader =torch.utils.data.DataLoader(p_dataset, batch_size=1)
     
     prediction = predict(loader, model)
     
     return prediction
-    
+
+# if __name__=='__main__':
+#         #folder structure in docker and be a bit different, so this is to be explicit

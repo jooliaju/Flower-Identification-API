@@ -1,3 +1,4 @@
 v_env
+.DS_Store
 model_pipeline/flowers
 model_pipeline/102flowers.tgz

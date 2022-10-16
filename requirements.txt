@@ -3,3 +3,4 @@ pandas==1.4.4
 Pillow==9.2.0
 torch==1.12.1
 torchvision==0.13.1
+python-multipart==0.0.5
