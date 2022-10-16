@@ -2,3 +2,9 @@ v_env
 .DS_Store
 model_pipeline/flowers
 model_pipeline/102flowers.tgz
+model_pipeline/__pycache__
+app/__pycache__
+app/model/__pycache__
+flowers.egg_info/
+*.txt
+flowers.egg-info/PKG-INFO
